@@ -9,14 +9,15 @@ from nbconvert.preprocessors.execute import CellExecutionError
 import warnings
 
 STDIO_CODE = u'''
-import sys
+import sys, os
+sys.path.append('%s')
 import tee
 sys.stdin = tee.Tee(sys.__stdin__, sys.stdin)
 sys.stdout = tee.Tee(sys.__stdout__, sys.stdout)
 sys.stderr = tee.Tee(sys.__stderr__, sys.stderr)
 del sys.modules['tee']
 del tee
-'''
+''' % os.path.dirname(os.path.realpath(__file__))
 
 def runnb(nb_path, allow_errors=False, no_stdio=False, to_file=None):
     with open(nb_path, 'r') as nb_file:
